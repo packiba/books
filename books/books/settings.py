@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -36,7 +35,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'debug_toolbar',
+
+    'social_django',
+
     'store'
+]
+
+INTERNAL_IPS = [
+    '127.0.0.1',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar_force.middleware.ForceDebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'books.urls'
@@ -54,7 +63,7 @@ ROOT_URLCONF = 'books.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,6 +91,11 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -118,3 +132,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    )
+}
+
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
+SOCIAL_AUTH_GITHUB_KEY = 'a094a044707fd88d1a73'
+SOCIAL_AUTH_GITHUB_SECRET = 'c879308090a8c2bdf51637ba83aa5947b3df4167'
